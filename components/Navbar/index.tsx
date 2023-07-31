@@ -10,8 +10,11 @@ import { UserButton } from "@clerk/nextjs";
 import { Button } from "@/components/ui/button";
 import { ModeToggle } from "@/components/ui/mode-toggle";
 
+// custom navbar components 
+import { MobileSidebar } from "./components";
+
 // icons
-import { Menu, Sparkles } from "lucide-react";
+import { Sparkles } from "lucide-react";
 
 // libs
 import { cn } from "@/lib/utils";
@@ -29,9 +32,9 @@ export interface INavbarProps {}
 
 const Navbar: React.FC<INavbarProps> = ({}) => {
     return (
-        <div className="fixed w-full z-50 flex justify-between items-center py-2 px-4 border-b border-primary/10 bg-secondary">
+        <div className="fixed w-full z-50 flex justify-between items-center py-2 px-4 h-16 border-b border-primary/10 bg-secondary">
             <div className="flex items-center">
-                <Menu className="block md:hidden" />
+                <MobileSidebar />
                 <Link href="/">
                     <h1
                         className={cn(
