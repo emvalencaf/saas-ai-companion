@@ -4,6 +4,9 @@ import { ClerkProvider } from "@clerk/nextjs";
 // custom providers
 import { ThemeProvider } from "@/providers/ThemeProvider";
 
+// lib
+import { cn } from "@/lib/utils";
+
 // styles
 import "./globals.css";
 
@@ -27,7 +30,7 @@ export default function RootLayout({
     return (
         <ClerkProvider>
             <html lang="en" suppressHydrationWarning>
-                <body className={inter.className}>
+                <body className={cn("bg-secondary",inter.className)}>
                     <ThemeProvider
                     attribute="class"
                         defaultTheme="light"
