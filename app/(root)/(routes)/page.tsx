@@ -1,6 +1,10 @@
+// actions
+import { getCategories } from "@/actions/category";
 
 // custom components
 import SearchInput from "@/components/inputs/SearchInput";
+import Categories from "@/components/Categories";
+
 
 // interfaces
 export interface IRootPageProps {
@@ -9,10 +13,14 @@ export interface IRootPageProps {
     },
 }
 
-const RootPage: React.FC<IRootPageProps> = ({ params }) => {
+const RootPage: React.FC<IRootPageProps> = async ({ params }) => {
+
+    const categories = await getCategories();
+
     return (
         <div className="h-full p-4 space-y-2">
            <SearchInput />
+           <Categories data={categories} />
         </div>
     );
 };
