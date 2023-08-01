@@ -1,5 +1,6 @@
 // providers
 import { ClerkProvider } from "@clerk/nextjs";
+import { Toaster } from "@/components/ui/toaster";
 
 // custom providers
 import { ThemeProvider } from "@/providers/ThemeProvider";
@@ -37,6 +38,7 @@ export default function RootLayout({
                         enableSystem
                     >
                         {children}
+                        <Toaster />
                     </ThemeProvider>
                 </body>
             </html>

@@ -1,8 +1,14 @@
 'use client';
 
 // hooks
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 
+// ui hooks
+import { useToast } from "@/components/ui/use-toast";
+
+// axios
+import axios from 'axios';
 
 // ui components
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
@@ -57,6 +63,12 @@ export interface ICompanionFormProps {
 
 const CompanionForm: React.FC<ICompanionFormProps> = ({ initialData, categories, }) => {
 
+    // toast
+    const { toast } = useToast();
+
+    // router
+    const router = useRouter();
+
     // states form
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -74,7 +86,33 @@ const CompanionForm: React.FC<ICompanionFormProps> = ({ initialData, categories,
 
     // handle on submit
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
-        console.log(values);
+        if (isLoading) return toast({
+            variant: "destructive",
+            description: "You cannot create/update more than one companion at once",
+        });
+
+        try {
+
+            // update or create a companion
+            initialData ?
+                await axios.patch(`/api/companion/${initialData.id}`, values)
+                : await axios.post(`/api/companion`, values);
+
+            toast({
+                description: "Success",
+            });
+
+            // refresh data from db 
+            router.refresh();
+            router.push("/");
+
+        } catch (error: any) {
+            console.log("[AI-COMPANION_ERROR]:", error);
+            toast({
+                variant: "destructive",
+                description: "Something went wrong",
+            })
+        }
     }
 
     return (
