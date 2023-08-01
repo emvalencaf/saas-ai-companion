@@ -49,7 +49,6 @@ export async function PATCH(
             seed,
         });
 
-
         return NextResponse.json(companion);
     } catch (error: any) {
         console.log('AI-COMPANION_PATCH_ERROR', error);

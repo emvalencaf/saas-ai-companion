@@ -5,6 +5,7 @@ import prismadb from "@/lib/prismadb"
 // interface
 import { Companion } from "@prisma/client";
 
+// Read
 export const getCompanionById = async (companionId: string): Promise<Companion | null> => {
 
     const companion = await prismadb.companion.findUnique({
@@ -16,6 +17,41 @@ export const getCompanionById = async (companionId: string): Promise<Companion |
     return companion;
 }
 
+export const getCompanions = async ({
+    categoryId,
+    name,
+} : {
+    categoryId?: string,
+    name?: string,
+}): Promise<(Companion & {
+    _count: {
+        messages: number,
+    },
+})[]> => {
+
+    const companions = await prismadb.companion.findMany({
+        where: {
+            categoryId,
+            name: {
+                search: name,
+            },
+        },
+        orderBy: {
+            createdAt: "desc",
+        },
+        include: {
+            _count: {// messages relations to the companion
+                select: {
+                    messages: true,
+                },
+            },
+        },
+    });
+
+    return companions;
+}
+
+// Create
 export const createCompanion = async ({
     categoryId,
     userId,
@@ -43,6 +79,7 @@ export const createCompanion = async ({
     return companion;
 }
 
+// Update
 export const partialUpdateCompanion = async (companionId: string, {
     categoryId,
     userId,
