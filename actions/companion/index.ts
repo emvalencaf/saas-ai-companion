@@ -4,6 +4,7 @@ import prismadb from "@/lib/prismadb"
 
 // interface
 import { Companion, Message } from "@prisma/client";
+import { IChatMessageProps } from "../../app/(chat)/(routes)/chat/[chatId]/components/ChatMessages/components/ChatMessage";
 
 // Read
 export const getCompanionById = async (companionId: string, userId?: string, isNeedAuth?: boolean,): Promise<Companion | null> => {
@@ -145,6 +146,30 @@ export const partialUpdateCompanion = async (companionId: string, {
     });
 
     return companion;
+}
+
+export const updateCompanionMessages = async (companionId: string, userId: string, message: {
+    content: string,
+    role: "user" | "system",
+},) => {
+
+    const companion = await prismadb.companion.update({
+        where: {
+            id: companionId,
+        },
+        data: {
+            messages: {
+                create: {
+                    content: message.content,
+                    role: message.role,
+                    userId,
+                }
+            }
+        }
+    });
+
+    return companion;
+
 }
 
 // Delete
