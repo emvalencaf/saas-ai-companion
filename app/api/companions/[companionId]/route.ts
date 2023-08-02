@@ -2,11 +2,12 @@
 import { NextResponse } from 'next/server';
 
 // auth clek
-import { currentUser } from '@clerk/nextjs';
+import { auth, currentUser } from '@clerk/nextjs';
 
 // actions
-import { partialUpdateCompanion } from "@/actions/companion";
+import { deleteCompanion, getCompanionById, partialUpdateCompanion } from "@/actions/companion";
 
+// Update
 export async function PATCH(
     req: Request,
     { params }: {
@@ -37,7 +38,7 @@ export async function PATCH(
 
         // TODO: Check for user subscription
 
-        // create a companion
+        // partial update a companion
         const companion = await partialUpdateCompanion(companionId, {
             name,
             categoryId,
@@ -51,7 +52,40 @@ export async function PATCH(
 
         return NextResponse.json(companion);
     } catch (error: any) {
-        console.log('AI-COMPANION_PATCH_ERROR', error);
+        console.log('[AI-COMPANION_PATCH_ERROR]: ', error);// dev log
+        return new NextResponse('Internal error', { status: 500 })
+    }
+}
+
+// DELETE
+export async function DELETE(
+    req: Request,
+    { params }: {
+        params: {
+            companionId: string,
+        },
+    },
+) {
+    try {
+
+        // get user id
+        const { userId, } = auth();
+      
+        // check if user is signed in
+        if (!userId) return new NextResponse("Unauthorized", { status: 401, });
+
+        const companion = await getCompanionById(params.companionId);
+
+        if (!companion) return new NextResponse("companion doesn't exists", { status: 404, });
+
+        if (companion.userId !== userId) return new NextResponse("You cannot delete a companion that isn't yours", { status: 401, });
+
+        const deleted = await deleteCompanion(params.companionId, userId);
+
+        return NextResponse.json(deleted);
+        
+    } catch (error: any) {
+        console.log('[AI-COMPANION_DELETE_ERROR]:', error);// dev log
         return new NextResponse('Internal error', { status: 500 })
     }
 }

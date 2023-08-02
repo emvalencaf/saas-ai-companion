@@ -3,14 +3,50 @@
 import prismadb from "@/lib/prismadb"
 
 // interface
-import { Companion } from "@prisma/client";
+import { Companion, Message } from "@prisma/client";
 
 // Read
-export const getCompanionById = async (companionId: string): Promise<Companion | null> => {
+export const getCompanionById = async (companionId: string, userId?: string, isNeedAuth?: boolean,): Promise<Companion | null> => {
+
+    const where = isNeedAuth ? {
+        id: companionId,
+        userId,
+    }: {
+        id: companionId,
+    };
+
+    const companion = await prismadb.companion.findUnique({
+        where: where,
+    });
+
+    return companion;
+}
+
+export const getCompanionByIdAndMessages = async (companionId: string, userId: string): Promise<Companion & {
+    messages: Message[];
+    _count: {
+        messages: number;
+    };
+} | null> => {
 
     const companion = await prismadb.companion.findUnique({
         where: {
             id: companionId,
+        },
+        include: {
+            messages: {
+                orderBy: {
+                    createdAt: "asc",
+                },
+                where: {
+                    userId,
+                },
+            },
+            _count: {
+                select: {
+                    messages: true,
+                },
+            },
         },
     });
 
@@ -20,7 +56,7 @@ export const getCompanionById = async (companionId: string): Promise<Companion |
 export const getCompanions = async ({
     categoryId,
     name,
-} : {
+}: {
     categoryId?: string,
     name?: string,
 }): Promise<(Companion & {
@@ -94,6 +130,7 @@ export const partialUpdateCompanion = async (companionId: string, {
     const companion = await prismadb.companion.update({
         where: {
             id: companionId,
+            userId,// only updated signed in user's companion
         },
         data: {
             categoryId,
@@ -104,6 +141,19 @@ export const partialUpdateCompanion = async (companionId: string, {
             instructions,
             seed,
             name,
+        },
+    });
+
+    return companion;
+}
+
+// Delete
+export const deleteCompanion = async (companionId: string, userId: string,) => {
+    
+    const companion = await prismadb.companion.delete({
+        where: {
+            userId,
+            id: companionId,
         },
     });
 

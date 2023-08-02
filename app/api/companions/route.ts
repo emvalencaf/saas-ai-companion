@@ -42,7 +42,7 @@ export async function POST(
 
         return NextResponse.json(companion);
     } catch (error: any) {
-        console.log('AI-COMPANION_POST_ERROR', error);
+        console.log('[AI-COMPANION_POST_ERROR]: ', error);// dev log
         return new NextResponse('Internal error', { status: 500 })
     }
 }
