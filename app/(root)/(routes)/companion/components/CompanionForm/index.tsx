@@ -95,11 +95,11 @@ const CompanionForm: React.FC<ICompanionFormProps> = ({ initialData, categories,
 
             // update or create a companion
             initialData ?
-                await axios.patch(`/api/companion/${initialData.id}`, values)
-                : await axios.post(`/api/companion`, values);
+                await axios.patch(`/api/companions/${initialData.id}`, values)
+                : await axios.post(`/api/companions`, values);
 
             toast({
-                description: "Success",
+                description: "Success!",
             });
 
             // refresh data from db 
@@ -107,10 +107,10 @@ const CompanionForm: React.FC<ICompanionFormProps> = ({ initialData, categories,
             router.push("/");
 
         } catch (error: any) {
-            console.log("[AI-COMPANION_ERROR]:", error);
+            console.log("[AI-COMPANION_ERROR]:", error); // DEV LOG
             toast({
                 variant: "destructive",
-                description: "Something went wrong",
+                description: "Something went wrong!",
             })
         }
     }
