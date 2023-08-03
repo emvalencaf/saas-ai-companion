@@ -44,7 +44,7 @@ const ChatMessages: React.FC<IChatMessagesProps> = ({ companion, isLoading, mess
                         key={`${message.content}-${Date.now()}`}
                         role={message.role}
                         content={message.content}
-                        src={message.src}
+                        src={companion.src}
                     />
                 ))
             }
