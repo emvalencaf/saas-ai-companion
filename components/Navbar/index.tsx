@@ -1,5 +1,8 @@
 "use client";
 
+// custom hooks
+import { useProModal } from "@/hooks";
+
 // next components
 import Link from "next/link";
 
@@ -31,6 +34,9 @@ const font = Poppins({
 export interface INavbarProps {}
 
 const Navbar: React.FC<INavbarProps> = ({}) => {
+
+    const proModal = useProModal();
+
     return (
         <div className="fixed w-full z-50 flex justify-between items-center py-2 px-4 h-16 border-b border-primary/10 bg-secondary">
             <div className="flex items-center">
@@ -47,7 +53,7 @@ const Navbar: React.FC<INavbarProps> = ({}) => {
                 </Link>
             </div>
             <div className="flex items-center gap-x-3">
-                <Button variant="premium" size="sm">
+                <Button variant="premium" size="sm" onClick={proModal.onOpen}>
                     Upgrade
                     <Sparkles className="h-4 w-4 fill-white ml-2" />
                 </Button>

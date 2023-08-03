@@ -4,6 +4,7 @@ import { Toaster } from "@/components/ui/toaster";
 
 // custom providers
 import { ThemeProvider } from "@/providers/ThemeProvider";
+import ModalProvider from "../providers/ModalProvider";
 
 // lib
 import { cn } from "@/lib/utils";
@@ -37,6 +38,7 @@ export default function RootLayout({
                         defaultTheme="light"
                         enableSystem
                     >
+                        <ModalProvider />
                         {children}
                         <Toaster />
                     </ThemeProvider>
