@@ -31,9 +31,11 @@ const font = Poppins({
 });
 
 // interfaces
-export interface INavbarProps {}
+export interface INavbarProps {
+    isPro: boolean;
+}
 
-const Navbar: React.FC<INavbarProps> = ({}) => {
+const Navbar: React.FC<INavbarProps> = ({ isPro, }) => {
 
     const proModal = useProModal();
 
@@ -53,10 +55,12 @@ const Navbar: React.FC<INavbarProps> = ({}) => {
                 </Link>
             </div>
             <div className="flex items-center gap-x-3">
-                <Button variant="premium" size="sm" onClick={proModal.onOpen}>
-                    Upgrade
-                    <Sparkles className="h-4 w-4 fill-white ml-2" />
-                </Button>
+                {!isPro && (
+                    <Button variant="premium" size="sm" onClick={proModal.onOpen}>
+                        Upgrade
+                        <Sparkles className="h-4 w-4 fill-white ml-2" />
+                    </Button>
+                )}
                 <ModeToggle />
                 <UserButton afterSignOutUrl="/" />
             </div>

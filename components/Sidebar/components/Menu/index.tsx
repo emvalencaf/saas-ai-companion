@@ -7,13 +7,17 @@ import MenuLink from "../MenuLink";
 import { navRoutes } from "@/constants";
 
 // interfaces
-export interface IMenuProps {}
+export interface IMenuProps {
+    isPro: boolean;
+}
 
-const Menu: React.FC<IMenuProps> = ({}) => {
+const Menu: React.FC<IMenuProps> = ({
+    isPro,
+}) => {
     return (
         <>
             {navRoutes.map((route, i) => (
-                <MenuLink key={`${route.href}-${i}`} {...route} />
+                <MenuLink key={`${route.href}-${i}`} {...route} isPro={isPro} />
             ))}
         </>
     );

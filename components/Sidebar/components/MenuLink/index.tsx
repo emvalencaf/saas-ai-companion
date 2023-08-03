@@ -3,6 +3,9 @@
 // hooks
 import { usePathname, useRouter } from "next/navigation";
 
+// custom hooks
+import { useProModal } from "@/hooks";
+
 // libs
 import { cn } from "@/lib/utils";
 
@@ -14,9 +17,10 @@ export interface IMenuLinkProps {
     icon: LucideIcon;
     label: string;
     isPro: boolean;
+    pro: boolean;
 }
 
-const MenuLink: React.FC<IMenuLinkProps> = ({ href, icon: Icon, label, isPro }) => {
+const MenuLink: React.FC<IMenuLinkProps> = ({ href, icon: Icon, label, isPro, pro, }) => {
 
     // get the pathname
     const pathname = usePathname();
@@ -24,10 +28,14 @@ const MenuLink: React.FC<IMenuLinkProps> = ({ href, icon: Icon, label, isPro }) 
     // router navigate controller
     const router = useRouter();
 
+    // pro modal controller
+    const proModal = useProModal();
 
     // navigate event
     const onNavigate = (url: string, isPro: boolean) => {
-        // TODO: Check is pro
+        
+        // if is a protected route for premium user open up pro modal
+        if (pro && !isPro) return proModal.onOpen();
 
         return router.push(url);
     }

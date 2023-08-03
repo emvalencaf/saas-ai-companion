@@ -7,6 +7,9 @@ import { auth, currentUser } from '@clerk/nextjs';
 // actions
 import { deleteCompanion, getCompanionById, partialUpdateCompanion } from "@/actions/companion";
 
+// libs
+import { checkSubscription } from '@/lib/subscription';
+
 // Update
 export async function PATCH(
     req: Request,
@@ -36,7 +39,9 @@ export async function PATCH(
         // validate data from front-end
         if (!src || !name || !description || !instructions || !seed || !categoryId) return new NextResponse("Missing required fields", { status: 400, });
 
-        // TODO: Check for user subscription
+        const isPro = await checkSubscription();
+
+        if (!isPro) return new NextResponse("Pro subscription required.", { status: 403, });
 
         // partial update a companion
         const companion = await partialUpdateCompanion(companionId, {

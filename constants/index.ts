@@ -5,7 +5,7 @@ interface INavRoutesProps {
     icon: LucideIcon;
     href: string;
     label: string;
-    isPro: boolean;
+    pro: boolean;
 }
 
 // constants objects
@@ -14,19 +14,19 @@ export const navRoutes: INavRoutesProps[] = [
         icon: Home,
         href: "/",
         label: "Home",
-        isPro: false,
+        pro: false,
     },
     {
         icon: Plus,
         href: "/companion/new",
         label: "Create",
-        isPro: true,
+        pro: true,
     },
     {
         icon: Settings,
         href: "/settings",
         label: "Settings",
-        isPro: false,
+        pro: false,
     },
 ];
 
