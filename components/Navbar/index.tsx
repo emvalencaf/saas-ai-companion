@@ -42,7 +42,7 @@ const Navbar: React.FC<INavbarProps> = ({ isPro, }) => {
     return (
         <div className="fixed w-full z-50 flex justify-between items-center py-2 px-4 h-16 border-b border-primary/10 bg-secondary">
             <div className="flex items-center">
-                <MobileSidebar />
+                <MobileSidebar isPro={isPro} />
                 <Link href="/">
                     <h1
                         className={cn(
