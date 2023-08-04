@@ -28,6 +28,8 @@ const ChatClient: React.FC<IChatClientProps> = ({ companion, }) => {
 
     const router = useRouter();
 
+    console.log(companion.id);
+
     const [messages, setMessages] = useState<IChatMessageProps[]>(companion.messages);
 
     const {

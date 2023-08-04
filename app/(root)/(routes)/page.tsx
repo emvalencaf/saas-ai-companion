@@ -10,15 +10,16 @@ import Companions from "@/components/Companions";
 
 // interfaces
 export interface IRootPageProps {
-    params: {
+    searchParams: {
         categoryId: string,
         name: string,
     },
 }
 
-const RootPage: React.FC<IRootPageProps> = async ({ params }) => {
+const RootPage: React.FC<IRootPageProps> = async ({ searchParams, }) => {
 
-    const { categoryId, name } = params;
+
+    const { categoryId, name } = searchParams;
 
     // get companions
     const companions = await getCompanions({

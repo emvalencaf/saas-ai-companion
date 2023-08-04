@@ -20,13 +20,15 @@ import { updateCompanionMessages } from "../../../../actions/companion";
 
 export async function POST(
     req: Request,
-    params: {
-        chatId: string,
+    { params, }: {
+        params: {
+            chatId: string,
+        },
     },
 ) {
     try {
 
-        const { chatId } = params;
+        console.log("params: ", params.chatId);
 
         const { prompt, } = await req.json();
 
@@ -40,10 +42,12 @@ export async function POST(
 
         if (!success) return new NextResponse("Rate limit exceeded", { status: 429, });
 
-        const companion = await updateCompanionMessages(chatId, user.id, {
+        const companion = await updateCompanionMessages(params.chatId, user.id, {
             content: prompt,
             role: "user",
         });
+
+        console.log("companion data: ", companion);
 
         if (!companion) return new NextResponse("Companion not found", { status: 404, });
 
@@ -72,10 +76,10 @@ export async function POST(
             companion_file_name,
         );
 
-        let relevanHistory = "";
+        let relevantHistory = "";
 
         if (!!similarDocs && similarDocs.length !== 0)
-            relevanHistory = similarDocs.map((doc) => doc.pageContent).join("\n");
+            relevantHistory = similarDocs.map((doc) => doc.pageContent).join("\n");
 
         const { handlers, } = LangChainStream();
 
@@ -95,15 +99,15 @@ export async function POST(
             await model
                 .call(
                     `
-                    ONLY generate plain sentences without prefix of who is speaking. DO NOT use ${name}: prefix.
-
+                    ONLY generate plain sentences without prefix of who is speaking. DO NOT use ${companion.name}: prefix. 
+            
                     ${companion.instructions}
-
-                    Below are the relevant details about ${name}'s past and the conversation you are in.
-                    ${relevanHistory}
-
-                    ${recentChatHistory}\n${name}:
-                    `,
+            
+                    Below are relevant details about ${companion.name}'s past and the conversation you are in.
+                    ${relevantHistory}
+            
+            
+                    ${recentChatHistory}\n${companion.name}:`
                 )
                 .catch((err) => console.log(err)),
         );
@@ -114,16 +118,16 @@ export async function POST(
 
         await memoryManager.writeToHistory("" + response.trim(), companionKey);
 
-        var Readble = require("stream").Readble;
+        var Readable = require("stream").Readable;
 
-        let s = new Readble();
+        let s = new Readable();
         s.push(response);
         s.push(null);
 
         if (response !== undefined && response.length > 1) {
             memoryManager.writeToHistory("" + response.trim(), companionKey);
 
-            await updateCompanionMessages(chatId, user.id, {
+            await updateCompanionMessages(params.chatId, user.id, {
                 content: response.trim(),
                 role: "system",
             });
